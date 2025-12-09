@@ -2,24 +2,32 @@
 
 ## Summary
 
-This commit implements a complete resume onboarding and management system for the Jobby application. Users can either upload existing resumes or create new ones through an interactive interview process.
+This commit implements a complete resume onboarding and management system for
+the Jobby application. Users can either upload existing resumes or create new
+ones through an interactive interview process.
 
 ## Files Added
 
 ### Database & Configuration
-- `supabase/migrations/001_resume_tables.sql` - Database schema for resumes and onboarding
+
+- `supabase/migrations/001_resume_tables.sql` - Database schema for resumes and
+  onboarding
 - `SUPABASE_MIGRATION.md` - Instructions for applying the migration
 - `IMPLEMENTATION_NOTES.md` - Comprehensive implementation documentation
 
 ### Type Definitions
+
 - `types/resume.ts` - JSON Resume schema types and database models
 
 ### Libraries & Utilities
+
 - `lib/jsonResume.ts` - Resume creation, validation, and manipulation
-- `lib/resumeParser.ts` - File parsing utilities (placeholder for AI integration)
+- `lib/resumeParser.ts` - File parsing utilities (placeholder for AI
+  integration)
 - `lib/resumeBuilder.ts` - Convert interview responses to JSON Resume format
 
 ### Onboarding Screens
+
 - `app/(onboarding)/_layout.tsx` - Onboarding stack navigator
 - `app/(onboarding)/welcome.tsx` - Welcome screen
 - `app/(onboarding)/resume-choice.tsx` - Upload vs. create choice
@@ -29,10 +37,12 @@ This commit implements a complete resume onboarding and management system for th
 - `app/(onboarding)/review.tsx` - Resume review screen
 
 ### Components
+
 - `components/ResumeUploader.tsx` - File upload with document picker
 - `components/InterviewChat.tsx` - Chat interface for resume interview
 
 ### Resume Management
+
 - `app/(tabs)/resume.tsx` - Dedicated resume viewing and management screen
 
 ## Files Modified
@@ -45,28 +55,33 @@ This commit implements a complete resume onboarding and management system for th
 ## Features Implemented
 
 ✅ **Database Schema**
+
 - Tables for resumes and onboarding status
 - Row Level Security policies
 - Supabase Storage bucket for resume files
 
 ✅ **Onboarding Flow**
+
 - 6-screen guided onboarding experience
 - Navigation guards enforce completion
 - Can be restarted to update resume
 
 ✅ **Resume Upload**
+
 - Support for PDF, DOCX, DOC, TXT, JPG, PNG
 - 10MB file size limit
 - Upload to Supabase Storage
 - Progress indicator
 
 ✅ **Interview Mode**
+
 - Chat-style interface
 - Questions for basics, work, education, skills, projects
 - Real-time response collection
 - Converts to JSON Resume format
 
 ✅ **Resume Management**
+
 - View complete resume in formatted layout
 - Update resume anytime
 - Shows in Account tab and dedicated Resume tab
@@ -76,6 +91,7 @@ This commit implements a complete resume onboarding and management system for th
 ### 1. Apply Database Migration
 
 Follow the instructions in `SUPABASE_MIGRATION.md`:
+
 1. Open Supabase Dashboard SQL Editor
 2. Run the migration script from `supabase/migrations/001_resume_tables.sql`
 3. Create the `resumes` storage bucket
@@ -84,6 +100,7 @@ Follow the instructions in `SUPABASE_MIGRATION.md`:
 ### 2. Test the Feature
 
 Start the app and test:
+
 ```bash
 pnpm start
 ```
@@ -97,6 +114,7 @@ pnpm start
 ### 3. Commit the Changes
 
 Suggested commit message:
+
 ```
 feat: Add resume onboarding and management flow
 
@@ -115,6 +133,7 @@ Future work: AI integration, document parsing, voice mode
 ## Future Enhancements
 
 The implementation includes placeholders for:
+
 - AI-powered interview (OpenAI/Claude integration)
 - Document parsing (extract data from uploaded files)
 - Voice interview mode
@@ -130,11 +149,13 @@ See `IMPLEMENTATION_NOTES.md` for detailed roadmap.
 3. **Voice mode is disabled** - UI exists but functionality not implemented
 4. **Single resume per user** - Basis resume only, no job-specific variants yet
 
-These are intentional MVP decisions to get the UX right before adding complexity.
+These are intentional MVP decisions to get the UX right before adding
+complexity.
 
 ## Testing Checklist
 
 Before committing, verify:
+
 - [x] All TypeScript compiles without errors
 - [x] No linter errors
 - [x] Database migration file is valid SQL
@@ -142,6 +163,7 @@ Before committing, verify:
 - [x] Documentation is comprehensive
 
 After applying migration, test:
+
 - [ ] New user signup flows to onboarding
 - [ ] File upload works with sample PDF
 - [ ] Interview completion creates resume
@@ -152,9 +174,11 @@ After applying migration, test:
 ## Dependencies
 
 Added:
+
 - `expo-document-picker@^14.0.8` - For file selection
 
 Required environment variables (should already exist):
+
 - `EXPO_PUBLIC_SUPABASE_URL`
 - `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
 
@@ -165,4 +189,3 @@ Required environment variables (should already exist):
 **Documentation**: ✅ Complete implementation notes in `IMPLEMENTATION_NOTES.md`
 
 **Next Step**: Apply database migration and test the feature
-

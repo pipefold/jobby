@@ -1,11 +1,17 @@
-import { useState, useEffect } from 'react';
-import { View, StyleSheet, ScrollView, ActivityIndicator, Alert } from 'react-native';
-import { Button } from '@rneui/themed';
-import { useRouter } from 'expo-router';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { supabase, resumeApi } from '@/lib/supabase';
-import { Resume } from '@/types/resume';
+import { ThemedText } from "@/components/themed-text";
+import { ThemedView } from "@/components/themed-view";
+import { resumeApi, supabase } from "@/lib/supabase";
+import { Resume } from "@/types/resume";
+import { Button } from "@rneui/themed";
+import { useRouter } from "expo-router";
+import { useEffect, useState } from "react";
+import {
+  ActivityIndicator,
+  Alert,
+  ScrollView,
+  StyleSheet,
+  View,
+} from "react-native";
 
 export default function ReviewScreen() {
   const router = useRouter();
@@ -18,16 +24,18 @@ export default function ReviewScreen() {
 
   const loadResume = async () => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('No user found');
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) throw new Error("No user found");
 
       const { data, error } = await resumeApi.getBasisResume(user.id);
       if (error) throw error;
-      
+
       setResume(data);
     } catch (error) {
-      console.error('Error loading resume:', error);
-      Alert.alert('Error', 'Failed to load your resume.');
+      console.error("Error loading resume:", error);
+      Alert.alert("Error", "Failed to load your resume.");
     } finally {
       setLoading(false);
     }
@@ -35,14 +43,16 @@ export default function ReviewScreen() {
 
   const handleComplete = async () => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('No user found');
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) throw new Error("No user found");
 
       await resumeApi.updateOnboardingStatus(user.id, true);
-      router.replace('/(tabs)');
+      router.replace("/(tabs)");
     } catch (error) {
-      console.error('Error completing onboarding:', error);
-      Alert.alert('Error', 'Failed to complete setup. Please try again.');
+      console.error("Error completing onboarding:", error);
+      Alert.alert("Error", "Failed to complete setup. Please try again.");
     }
   };
 
@@ -93,7 +103,9 @@ export default function ReviewScreen() {
               <ThemedText>Phone: {resume.resume_data.basics.phone}</ThemedText>
             )}
             {resume.resume_data.basics.summary && (
-              <ThemedText>Summary: {resume.resume_data.basics.summary}</ThemedText>
+              <ThemedText>
+                Summary: {resume.resume_data.basics.summary}
+              </ThemedText>
             )}
           </View>
         )}
@@ -108,27 +120,30 @@ export default function ReviewScreen() {
                 <ThemedText style={styles.itemTitle}>{job.position}</ThemedText>
                 <ThemedText>{job.name}</ThemedText>
                 <ThemedText style={styles.dates}>
-                  {job.startDate} - {job.endDate || 'Present'}
+                  {job.startDate} - {job.endDate || "Present"}
                 </ThemedText>
               </View>
             ))}
           </View>
         )}
 
-        {resume.resume_data?.education && resume.resume_data.education.length > 0 && (
-          <View style={styles.section}>
-            <ThemedText type="subtitle" style={styles.sectionTitle}>
-              Education
-            </ThemedText>
-            {resume.resume_data.education.map((edu, index) => (
-              <View key={index} style={styles.item}>
-                <ThemedText style={styles.itemTitle}>{edu.studyType}</ThemedText>
-                <ThemedText>{edu.institution}</ThemedText>
-                <ThemedText>{edu.area}</ThemedText>
-              </View>
-            ))}
-          </View>
-        )}
+        {resume.resume_data?.education &&
+          resume.resume_data.education.length > 0 && (
+            <View style={styles.section}>
+              <ThemedText type="subtitle" style={styles.sectionTitle}>
+                Education
+              </ThemedText>
+              {resume.resume_data.education.map((edu, index) => (
+                <View key={index} style={styles.item}>
+                  <ThemedText style={styles.itemTitle}>
+                    {edu.studyType}
+                  </ThemedText>
+                  <ThemedText>{edu.institution}</ThemedText>
+                  <ThemedText>{edu.area}</ThemedText>
+                </View>
+              ))}
+            </View>
+          )}
 
         {resume.resume_data?.skills && resume.resume_data.skills.length > 0 && (
           <View style={styles.section}>
@@ -171,7 +186,7 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingTop: 60,
     borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
+    borderBottomColor: "#e0e0e0",
   },
   subtitle: {
     marginTop: 8,
@@ -187,16 +202,16 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     marginBottom: 15,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   item: {
     marginBottom: 15,
     paddingBottom: 15,
     borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
+    borderBottomColor: "#e0e0e0",
   },
   itemTitle: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     fontSize: 16,
     marginBottom: 5,
   },
@@ -206,15 +221,15 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   skillsContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     gap: 10,
   },
   skill: {
     fontSize: 14,
   },
   buttonContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     padding: 20,
     paddingBottom: 40,
     gap: 10,
@@ -225,15 +240,14 @@ const styles = StyleSheet.create({
   },
   loadingContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     gap: 10,
   },
   errorContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     gap: 20,
   },
 });
-

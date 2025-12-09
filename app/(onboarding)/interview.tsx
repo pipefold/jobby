@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { View, StyleSheet, Alert, ActivityIndicator } from 'react-native';
 import { Button } from '@rneui/themed';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import InterviewChat from '@/components/InterviewChat';
-import { InterviewResponse, JSONResume } from '@/types/resume';
+import { InterviewResponse } from '@/types/resume';
 import { buildResumeFromInterview } from '@/lib/resumeBuilder';
 import { supabase, resumeApi } from '@/lib/supabase';
 

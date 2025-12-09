@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { supabase, resumeApi } from '../lib/supabase'
 import { StyleSheet, View, Alert } from 'react-native'
 import { Button, Input } from '@rneui/themed'
@@ -16,14 +16,7 @@ export default function Account({ session }: { session: Session }) {
   const [resume, setResume] = useState<Resume | null>(null)
   const router = useRouter()
 
-  useEffect(() => {
-    if (session) {
-      getProfile()
-      loadResume()
-    }
-  }, [session])
-
-  async function getProfile() {
+  const getProfile = useCallback(async () => {
     try {
       setLoading(true)
       if (!session?.user) throw new Error('No user on the session!')
@@ -49,9 +42,9 @@ export default function Account({ session }: { session: Session }) {
     } finally {
       setLoading(false)
     }
-  }
+  }, [session?.user])
 
-  async function loadResume() {
+  const loadResume = useCallback(async () => {
     try {
       if (!session?.user) return
       
@@ -64,7 +57,14 @@ export default function Account({ session }: { session: Session }) {
     } catch (error) {
       console.error('Error in loadResume:', error)
     }
-  }
+  }, [session?.user])
+
+  useEffect(() => {
+    if (session) {
+      getProfile()
+      loadResume()
+    }
+  }, [session, getProfile, loadResume])
 
   async function updateProfile({
     username,

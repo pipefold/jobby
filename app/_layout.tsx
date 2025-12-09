@@ -76,7 +76,6 @@ export default function RootLayout() {
     if (loading) return;
 
     const inOnboarding = segments[0] === '(onboarding)';
-    const inTabs = segments[0] === '(tabs)';
 
     if (!session) {
       // Not logged in - show auth screen
@@ -90,7 +89,7 @@ export default function RootLayout() {
       // Onboarding complete but still in onboarding flow - redirect to main app
       router.replace('/(tabs)');
     }
-  }, [session, onboardingStatus, loading, segments]);
+  }, [session, onboardingStatus, loading, segments, router]);
 
   // If not authenticated, show Auth screen
   if (!session) {

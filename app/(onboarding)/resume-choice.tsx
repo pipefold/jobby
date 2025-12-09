@@ -15,12 +15,13 @@ export default function ResumeChoiceScreen() {
         </ThemedText>
 
         <ThemedText style={styles.description}>
-          If you already have a resume, you can upload it and we'll help you
-          format it.
+          If you already have a resume, you can upload it and we&apos;ll help
+          you format it.
         </ThemedText>
 
         <ThemedText style={styles.description}>
-          Otherwise, we'll help you create one through a quick conversation.
+          Otherwise, we&apos;ll help you create one through a quick
+          conversation.
         </ThemedText>
       </View>
 

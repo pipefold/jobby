@@ -15,7 +15,7 @@ export default function WelcomeScreen() {
         </ThemedText>
         
         <ThemedText style={styles.description}>
-          Let's get you set up with a resume so you can start applying to jobs.
+          Let&apos;s get you set up with a resume so you can start applying to jobs.
         </ThemedText>
         
         <ThemedText style={styles.description}>

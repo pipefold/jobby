@@ -1,11 +1,10 @@
 import { useState } from 'react';
-import { View, StyleSheet, Alert, Platform } from 'react-native';
+import { View, StyleSheet, Alert } from 'react-native';
 import { Button } from '@rneui/themed';
 import * as DocumentPicker from 'expo-document-picker';
 import { ThemedText } from '@/components/themed-text';
 import { supabase, resumeApi } from '@/lib/supabase';
 import { parseResumeFile } from '@/lib/resumeParser';
-import { SUPPORTED_DOCUMENT_TYPES } from '@/types/resume';
 
 interface ResumeUploaderProps {
   onUploadSuccess?: (fileUrl: string, fileName: string) => void;

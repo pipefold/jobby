@@ -51,8 +51,8 @@ export default function UploadScreen() {
         </ThemedText>
 
         <ThemedText style={styles.description}>
-          Upload your resume in PDF, DOCX, or image format. We'll extract the
-          information and format it for you.
+          Upload your resume in PDF, DOCX, or image format. We&apos;ll extract
+          the information and format it for you.
         </ThemedText>
 
         <ResumeUploader onUploadSuccess={handleUploadSuccess} />

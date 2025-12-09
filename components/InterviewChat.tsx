@@ -9,7 +9,6 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
 import { InterviewResponse, JSONResume } from '@/types/resume';
 import { getQuestionsForSection, getNextSection } from '@/lib/resumeBuilder';
 
@@ -40,6 +39,7 @@ export default function InterviewChat({ mode, onComplete }: InterviewChatProps) 
     
     // Load first section's questions
     loadSection('basics');
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const loadSection = (section: keyof JSONResume) => {

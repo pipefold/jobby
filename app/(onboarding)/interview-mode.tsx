@@ -24,7 +24,7 @@ export default function InterviewModeScreen() {
         </ThemedText>
         
         <ThemedText style={styles.description}>
-          We'll ask you some questions to build your resume. You can type your answers or speak them.
+          We&apos;ll ask you some questions to build your resume. You can type your answers or speak them.
         </ThemedText>
       </View>
 

@@ -69,7 +69,7 @@ export default function ResumeScreen() {
             No Resume Found
           </ThemedText>
           <ThemedText style={styles.emptyText}>
-            You haven't created a resume yet. Let's get started!
+            You haven&apos;t created a resume yet. Let&apos;s get started!
           </ThemedText>
           <Button
             title="Create Resume"

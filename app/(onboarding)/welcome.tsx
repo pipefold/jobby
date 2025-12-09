@@ -13,11 +13,12 @@ export default function WelcomeScreen() {
         <ThemedText type="title" style={styles.title}>
           Welcome to Jobby! 🎉
         </ThemedText>
-        
+
         <ThemedText style={styles.description}>
-          Let&apos;s get you set up with a resume so you can start applying to jobs.
+          Let&apos;s get you set up with a resume so you can start applying to
+          jobs.
         </ThemedText>
-        
+
         <ThemedText style={styles.description}>
           This will only take a few minutes, and you can update it anytime.
         </ThemedText>
@@ -64,4 +65,3 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
   },
 });
-

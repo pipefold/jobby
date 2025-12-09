@@ -42,7 +42,7 @@ export function validateResume(resume: any): resume is JSONResume {
   if (!resume || typeof resume !== 'object') {
     return false;
   }
-  
+
   // At minimum, should have basics or some content
   return (
     'basics' in resume ||
@@ -76,7 +76,7 @@ export function mergeResumeData(
     ...existing,
     ...updates,
   };
-  
+
   return updateResumeTimestamp(merged);
 }
 
@@ -84,15 +84,12 @@ export function mergeResumeData(
  * Checks if a resume has substantial content
  */
 export function isResumeComplete(resume: JSONResume): boolean {
-  const hasBasics = resume.basics && (
-    !!resume.basics.name ||
-    !!resume.basics.email
-  );
-  
+  const hasBasics =
+    resume.basics && (!!resume.basics.name || !!resume.basics.email);
+
   const hasWork = resume.work && resume.work.length > 0;
   const hasEducation = resume.education && resume.education.length > 0;
   const hasSkills = resume.skills && resume.skills.length > 0;
-  
+
   return !!(hasBasics && (hasWork || hasEducation || hasSkills));
 }
-

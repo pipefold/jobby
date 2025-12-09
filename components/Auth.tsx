@@ -1,14 +1,14 @@
-import { Button, Input } from "@rneui/themed";
-import React, { useState } from "react";
-import { Alert, AppState, StyleSheet, View } from "react-native";
-import { supabase } from "../lib/supabase";
+import { Button, Input } from '@rneui/themed';
+import React, { useState } from 'react';
+import { Alert, AppState, StyleSheet, View } from 'react-native';
+import { supabase } from '../lib/supabase';
 
 // Tells Supabase Auth to continuously refresh the session automatically if
 // the app is in the foreground. When this is added, you will continue to receive
 // `onAuthStateChange` events with the `TOKEN_REFRESHED` or `SIGNED_OUT` event
 // if the user's session is terminated. This should only be registered once.
-AppState.addEventListener("change", (state) => {
-  if (state === "active") {
+AppState.addEventListener('change', (state) => {
+  if (state === 'active') {
     supabase.auth.startAutoRefresh();
   } else {
     supabase.auth.stopAutoRefresh();
@@ -16,8 +16,8 @@ AppState.addEventListener("change", (state) => {
 });
 
 export default function Auth() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
   async function signInWithEmail() {
@@ -43,7 +43,7 @@ export default function Auth() {
 
     if (error) Alert.alert(error.message);
     if (!session)
-      Alert.alert("Please check your inbox for email verification!");
+      Alert.alert('Please check your inbox for email verification!');
     setLoading(false);
   }
 
@@ -52,22 +52,22 @@ export default function Auth() {
       <View style={[styles.verticallySpaced, styles.mt20]}>
         <Input
           label="Email"
-          leftIcon={{ type: "font-awesome", name: "envelope" }}
+          leftIcon={{ type: 'font-awesome', name: 'envelope' }}
           onChangeText={(text) => setEmail(text)}
           value={email}
           placeholder="email@address.com"
-          autoCapitalize={"none"}
+          autoCapitalize={'none'}
         />
       </View>
       <View style={styles.verticallySpaced}>
         <Input
           label="Password"
-          leftIcon={{ type: "font-awesome", name: "lock" }}
+          leftIcon={{ type: 'font-awesome', name: 'lock' }}
           onChangeText={(text) => setPassword(text)}
           value={password}
           secureTextEntry={true}
           placeholder="Password"
-          autoCapitalize={"none"}
+          autoCapitalize={'none'}
         />
       </View>
       <View style={[styles.verticallySpaced, styles.mt20]}>
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
   verticallySpaced: {
     paddingTop: 4,
     paddingBottom: 4,
-    alignSelf: "stretch",
+    alignSelf: 'stretch',
   },
   mt20: {
     marginTop: 20,

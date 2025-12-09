@@ -22,9 +22,10 @@ export default function InterviewModeScreen() {
         <ThemedText type="title" style={styles.title}>
           How would you like to create your resume?
         </ThemedText>
-        
+
         <ThemedText style={styles.description}>
-          We&apos;ll ask you some questions to build your resume. You can type your answers or speak them.
+          We&apos;ll ask you some questions to build your resume. You can type
+          your answers or speak them.
         </ThemedText>
       </View>
 
@@ -35,7 +36,7 @@ export default function InterviewModeScreen() {
           size="lg"
           buttonStyle={styles.button}
         />
-        
+
         <Button
           title="Speak my answers (Coming Soon)"
           onPress={handleVoiceInterview}
@@ -79,4 +80,3 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
   },
 });
-

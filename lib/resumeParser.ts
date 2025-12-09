@@ -3,13 +3,13 @@ import { createEmptyResume } from './jsonResume';
 
 /**
  * Parse uploaded resume file and extract data into JSON Resume format
- * 
+ *
  * NOTE: This is a placeholder implementation. Full parsing would require:
  * - PDF parsing library (e.g., pdf-parse, react-native-pdf-lib)
  * - DOCX parsing library (e.g., mammoth)
  * - OCR for images (e.g., Tesseract.js)
  * - AI-based extraction for better accuracy
- * 
+ *
  * For MVP, this creates a basic resume structure with the file reference
  */
 export async function parseResumeFile(
@@ -19,20 +19,22 @@ export async function parseResumeFile(
 ): Promise<JSONResume> {
   // Create empty resume template
   const resume = createEmptyResume();
-  
+
   // Add file metadata to meta section
   resume.meta = {
     ...resume.meta,
     canonical: fileUri,
     lastModified: new Date().toISOString(),
   };
-  
+
   // TODO: Implement actual parsing based on file type
   // For now, return empty structure with meta
-  
+
   console.log(`Parsing file: ${fileName} (${mimeType})`);
-  console.log('Note: Full parsing not yet implemented - returning empty template');
-  
+  console.log(
+    'Note: Full parsing not yet implemented - returning empty template'
+  );
+
   return resume;
 }
 
@@ -77,4 +79,3 @@ export async function extractResumeDataWithAI(
   // Would send text to OpenAI/Claude API with prompt to extract resume data
   return createEmptyResume();
 }
-

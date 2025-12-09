@@ -24,20 +24,22 @@ export default function InterviewScreen() {
   const handleSaveResume = async () => {
     try {
       setSaving(true);
-      
+
       // Get current user
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) throw new Error('No user found');
 
       // Build resume from interview responses
       const resumeData = buildResumeFromInterview(responses);
-      
+
       // Save resume to database
       await resumeApi.upsertResume(user.id, resumeData);
-      
+
       // Mark onboarding as complete
       await resumeApi.updateOnboardingStatus(user.id, true);
-      
+
       // Navigate to review or main app
       router.replace('/(tabs)');
     } catch (error) {
@@ -112,4 +114,3 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
   },
 });
-

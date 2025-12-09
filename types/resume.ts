@@ -193,4 +193,3 @@ export const SUPPORTED_DOCUMENT_TYPES = [
   DocumentType.JPG,
   DocumentType.PNG,
 ];
-

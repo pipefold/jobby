@@ -120,14 +120,12 @@ automatically routes users:
 ### User Flow
 
 1. **New User Signup/Login**:
-
    - User creates account through Auth component
    - System creates `onboarding_status` record automatically
    - `app/_layout.tsx` detects incomplete onboarding
    - Redirects to `/(onboarding)/welcome`
 
 2. **Onboarding - Upload Path**:
-
    - User chooses "I have a resume"
    - Selects file from device
    - File uploads to Supabase Storage under `resumes/{user_id}/`
@@ -137,7 +135,6 @@ automatically routes users:
    - Redirects to main app
 
 3. **Onboarding - Interview Path**:
-
    - User chooses "Create a new resume"
    - Selects text interview mode
    - Chat interface asks questions section by section

@@ -1,35 +1,36 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { createClient } from '@supabase/supabase-js'
-import { Platform } from 'react-native'
-import { Resume, OnboardingStatus, JSONResume } from '@/types/resume'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { createClient } from '@supabase/supabase-js';
+import { Platform } from 'react-native';
+import { Resume, OnboardingStatus, JSONResume } from '@/types/resume';
 
-const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL || ''
-const supabasePublishableKey = process.env.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY || ''
+const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL || '';
+const supabasePublishableKey =
+  process.env.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY || '';
 
 // Web-compatible storage adapter
 const webStorage = {
   getItem: (key: string) => {
     if (typeof window !== 'undefined') {
-      return Promise.resolve(window.localStorage.getItem(key))
+      return Promise.resolve(window.localStorage.getItem(key));
     }
-    return Promise.resolve(null)
+    return Promise.resolve(null);
   },
   setItem: (key: string, value: string) => {
     if (typeof window !== 'undefined') {
-      window.localStorage.setItem(key, value)
+      window.localStorage.setItem(key, value);
     }
-    return Promise.resolve()
+    return Promise.resolve();
   },
   removeItem: (key: string) => {
     if (typeof window !== 'undefined') {
-      window.localStorage.removeItem(key)
+      window.localStorage.removeItem(key);
     }
-    return Promise.resolve()
+    return Promise.resolve();
   },
-}
+};
 
 // Use localStorage for web, AsyncStorage for native
-const storage = Platform.OS === 'web' ? webStorage : AsyncStorage
+const storage = Platform.OS === 'web' ? webStorage : AsyncStorage;
 
 export const supabase = createClient(supabaseUrl, supabasePublishableKey, {
   auth: {
@@ -38,7 +39,7 @@ export const supabase = createClient(supabaseUrl, supabasePublishableKey, {
     persistSession: true,
     detectSessionInUrl: false,
   },
-})
+});
 
 // Resume helper functions
 export const resumeApi = {
@@ -50,9 +51,9 @@ export const resumeApi = {
       .from('onboarding_status')
       .select('*')
       .eq('user_id', userId)
-      .single()
-    
-    return { data: data as OnboardingStatus | null, error }
+      .single();
+
+    return { data: data as OnboardingStatus | null, error };
   },
 
   /**
@@ -62,15 +63,15 @@ export const resumeApi = {
     const updates: Partial<OnboardingStatus> = {
       resume_completed: completed,
       completed_at: completed ? new Date().toISOString() : null,
-    }
-    
+    };
+
     const { data, error } = await supabase
       .from('onboarding_status')
       .upsert({ user_id: userId, ...updates })
       .select()
-      .single()
-    
-    return { data: data as OnboardingStatus | null, error }
+      .single();
+
+    return { data: data as OnboardingStatus | null, error };
   },
 
   /**
@@ -84,9 +85,9 @@ export const resumeApi = {
       .eq('is_basis_resume', true)
       .order('created_at', { ascending: false })
       .limit(1)
-      .single()
-    
-    return { data: data as Resume | null, error }
+      .single();
+
+    return { data: data as Resume | null, error };
   },
 
   /**
@@ -106,11 +107,11 @@ export const resumeApi = {
       original_file_name: fileName || null,
       is_basis_resume: isBasis,
       updated_at: new Date().toISOString(),
-    }
-    
+    };
+
     // Check if user already has a basis resume
-    const { data: existing } = await this.getBasisResume(userId)
-    
+    const { data: existing } = await this.getBasisResume(userId);
+
     if (existing) {
       // Update existing
       const { data, error } = await supabase
@@ -118,18 +119,18 @@ export const resumeApi = {
         .update(resume)
         .eq('id', existing.id)
         .select()
-        .single()
-      
-      return { data: data as Resume | null, error }
+        .single();
+
+      return { data: data as Resume | null, error };
     } else {
       // Insert new
       const { data, error } = await supabase
         .from('resumes')
         .insert(resume)
         .select()
-        .single()
-      
-      return { data: data as Resume | null, error }
+        .single();
+
+      return { data: data as Resume | null, error };
     }
   },
 
@@ -144,46 +145,46 @@ export const resumeApi = {
   ) {
     try {
       // Generate unique filename
-      const timestamp = Date.now()
-      const fileExt = fileName.split('.').pop()
-      const filePath = `${userId}/resume_${timestamp}.${fileExt}`
-      
+      const timestamp = Date.now();
+      const fileExt = fileName.split('.').pop();
+      const filePath = `${userId}/resume_${timestamp}.${fileExt}`;
+
       // Read file as blob (different for web vs native)
-      let fileBlob: Blob
-      
+      let fileBlob: Blob;
+
       if (Platform.OS === 'web') {
-        const response = await fetch(fileUri)
-        fileBlob = await response.blob()
+        const response = await fetch(fileUri);
+        fileBlob = await response.blob();
       } else {
         // For React Native, we need to read the file
-        const response = await fetch(fileUri)
-        fileBlob = await response.blob()
+        const response = await fetch(fileUri);
+        fileBlob = await response.blob();
       }
-      
+
       // Upload to Supabase Storage
       const { data, error } = await supabase.storage
         .from('resumes')
         .upload(filePath, fileBlob, {
           contentType: mimeType,
           upsert: false,
-        })
-      
-      if (error) throw error
-      
+        });
+
+      if (error) throw error;
+
       // Get public URL
       const { data: urlData } = supabase.storage
         .from('resumes')
-        .getPublicUrl(filePath)
-      
+        .getPublicUrl(filePath);
+
       return {
         data: {
           path: data.path,
           url: urlData.publicUrl,
         },
         error: null,
-      }
+      };
     } catch (error) {
-      return { data: null, error }
+      return { data: null, error };
     }
   },
 
@@ -193,8 +194,8 @@ export const resumeApi = {
   async getResumeFileUrl(filePath: string, expiresIn: number = 3600) {
     const { data, error } = await supabase.storage
       .from('resumes')
-      .createSignedUrl(filePath, expiresIn)
-    
-    return { data, error }
+      .createSignedUrl(filePath, expiresIn);
+
+    return { data, error };
   },
-}
+};

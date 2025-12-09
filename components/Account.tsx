@@ -1,83 +1,84 @@
-import { useState, useEffect, useCallback } from 'react'
-import { supabase, resumeApi } from '../lib/supabase'
-import { StyleSheet, View, Alert } from 'react-native'
-import { Button, Input } from '@rneui/themed'
-import { Session } from '@supabase/supabase-js'
-import { useRouter } from 'expo-router'
-import Avatar from './Avatar'
-import { Resume } from '@/types/resume'
-import { ThemedText } from './themed-text'
+import { useState, useEffect, useCallback } from 'react';
+import { supabase, resumeApi } from '../lib/supabase';
+import { StyleSheet, View, Alert } from 'react-native';
+import { Button, Input } from '@rneui/themed';
+import { Session } from '@supabase/supabase-js';
+import { useRouter } from 'expo-router';
+import Avatar from './Avatar';
+import { Resume } from '@/types/resume';
+import { ThemedText } from './themed-text';
 
 export default function Account({ session }: { session: Session }) {
-  const [loading, setLoading] = useState(true)
-  const [username, setUsername] = useState('')
-  const [website, setWebsite] = useState('')
-  const [avatarUrl, setAvatarUrl] = useState('')
-  const [resume, setResume] = useState<Resume | null>(null)
-  const router = useRouter()
+  const [loading, setLoading] = useState(true);
+  const [username, setUsername] = useState('');
+  const [website, setWebsite] = useState('');
+  const [avatarUrl, setAvatarUrl] = useState('');
+  const [resume, setResume] = useState<Resume | null>(null);
+  const router = useRouter();
 
   const getProfile = useCallback(async () => {
     try {
-      setLoading(true)
-      if (!session?.user) throw new Error('No user on the session!')
+      setLoading(true);
+      if (!session?.user) throw new Error('No user on the session!');
 
       const { data, error, status } = await supabase
         .from('profiles')
         .select(`username, website, avatar_url`)
         .eq('id', session?.user.id)
-        .single()
+        .single();
       if (error && status !== 406) {
-        throw error
+        throw error;
       }
 
       if (data) {
-        setUsername(data.username)
-        setWebsite(data.website)
-        setAvatarUrl(data.avatar_url)
+        setUsername(data.username);
+        setWebsite(data.website);
+        setAvatarUrl(data.avatar_url);
       }
     } catch (error) {
       if (error instanceof Error) {
-        Alert.alert(error.message)
+        Alert.alert(error.message);
       }
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [session?.user])
+  }, [session?.user]);
 
   const loadResume = useCallback(async () => {
     try {
-      if (!session?.user) return
-      
-      const { data, error } = await resumeApi.getBasisResume(session.user.id)
-      if (error && error.code !== 'PGRST116') { // Ignore "not found" error
-        console.error('Error loading resume:', error)
+      if (!session?.user) return;
+
+      const { data, error } = await resumeApi.getBasisResume(session.user.id);
+      if (error && error.code !== 'PGRST116') {
+        // Ignore "not found" error
+        console.error('Error loading resume:', error);
       }
-      
-      setResume(data)
+
+      setResume(data);
     } catch (error) {
-      console.error('Error in loadResume:', error)
+      console.error('Error in loadResume:', error);
     }
-  }, [session?.user])
+  }, [session?.user]);
 
   useEffect(() => {
     if (session) {
-      getProfile()
-      loadResume()
+      getProfile();
+      loadResume();
     }
-  }, [session, getProfile, loadResume])
+  }, [session, getProfile, loadResume]);
 
   async function updateProfile({
     username,
     website,
     avatar_url,
   }: {
-    username: string
-    website: string
-    avatar_url: string
+    username: string;
+    website: string;
+    avatar_url: string;
   }) {
     try {
-      setLoading(true)
-      if (!session?.user) throw new Error('No user on the session!')
+      setLoading(true);
+      if (!session?.user) throw new Error('No user on the session!');
 
       const updates = {
         id: session?.user.id,
@@ -85,36 +86,36 @@ export default function Account({ session }: { session: Session }) {
         website,
         avatar_url,
         updated_at: new Date(),
-      }
+      };
 
-      const { error } = await supabase.from('profiles').upsert(updates)
+      const { error } = await supabase.from('profiles').upsert(updates);
 
       if (error) {
-        throw error
+        throw error;
       }
     } catch (error) {
       if (error instanceof Error) {
-        Alert.alert(error.message)
+        Alert.alert(error.message);
       }
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
   const handleUpdateResume = async () => {
     try {
       // Reset onboarding status to restart the flow
-      if (!session?.user) return
-      
-      await resumeApi.updateOnboardingStatus(session.user.id, false)
-      
+      if (!session?.user) return;
+
+      await resumeApi.updateOnboardingStatus(session.user.id, false);
+
       // Navigate to onboarding
-      router.push('/(onboarding)/resume-choice')
+      router.push('/(onboarding)/resume-choice');
     } catch (error) {
-      console.error('Error resetting onboarding:', error)
-      Alert.alert('Error', 'Failed to start resume update')
+      console.error('Error resetting onboarding:', error);
+      Alert.alert('Error', 'Failed to start resume update');
     }
-  }
+  };
 
   return (
     <View style={styles.container}>
@@ -123,8 +124,8 @@ export default function Account({ session }: { session: Session }) {
           size={200}
           url={avatarUrl}
           onUpload={(url: string) => {
-            setAvatarUrl(url)
-            updateProfile({ username, website, avatar_url: url })
+            setAvatarUrl(url);
+            updateProfile({ username, website, avatar_url: url });
           }}
         />
       </View>
@@ -132,16 +133,26 @@ export default function Account({ session }: { session: Session }) {
         <Input label="Email" value={session?.user?.email} disabled />
       </View>
       <View style={styles.verticallySpaced}>
-        <Input label="Username" value={username || ''} onChangeText={(text) => setUsername(text)} />
+        <Input
+          label="Username"
+          value={username || ''}
+          onChangeText={(text) => setUsername(text)}
+        />
       </View>
       <View style={styles.verticallySpaced}>
-        <Input label="Website" value={website || ''} onChangeText={(text) => setWebsite(text)} />
+        <Input
+          label="Website"
+          value={website || ''}
+          onChangeText={(text) => setWebsite(text)}
+        />
       </View>
 
       <View style={[styles.verticallySpaced, styles.mt20]}>
         <Button
           title={loading ? 'Loading ...' : 'Update Profile'}
-          onPress={() => updateProfile({ username, website, avatar_url: avatarUrl })}
+          onPress={() =>
+            updateProfile({ username, website, avatar_url: avatarUrl })
+          }
           disabled={loading}
         />
       </View>
@@ -151,7 +162,7 @@ export default function Account({ session }: { session: Session }) {
         <ThemedText type="subtitle" style={styles.resumeTitle}>
           Your Resume
         </ThemedText>
-        
+
         {resume ? (
           <View>
             <ThemedText style={styles.resumeInfo}>
@@ -169,9 +180,7 @@ export default function Account({ session }: { session: Session }) {
             )}
           </View>
         ) : (
-          <ThemedText style={styles.noResume}>
-            No resume found
-          </ThemedText>
+          <ThemedText style={styles.noResume}>No resume found</ThemedText>
         )}
 
         <View style={[styles.verticallySpaced, styles.mt20]}>
@@ -187,7 +196,7 @@ export default function Account({ session }: { session: Session }) {
         <Button title="Sign Out" onPress={() => supabase.auth.signOut()} />
       </View>
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -223,5 +232,4 @@ const styles = StyleSheet.create({
     opacity: 0.6,
     fontStyle: 'italic',
   },
-})
-
+});

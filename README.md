@@ -11,7 +11,6 @@ This is an [Expo](https://expo.dev) project with [Supabase](https://supabase.com
    ```
 
 2. Set up Supabase
-
    - Create a Supabase project at [https://supabase.com/dashboard](https://supabase.com/dashboard)
    - Run the "User Management Starter" SQL script from the SQL Editor
    - Get your Project URL and Publishable API Key from Settings > API
@@ -24,7 +23,7 @@ This is an [Expo](https://expo.dev) project with [Supabase](https://supabase.com
    ```
 
    Edit `.env` and add your Supabase credentials:
-   
+
    ```env
    EXPO_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
    EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your-key-here

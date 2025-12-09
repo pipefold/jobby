@@ -1,11 +1,11 @@
-import ResumeUploader from "@/components/ResumeUploader";
-import { ThemedText } from "@/components/themed-text";
-import { ThemedView } from "@/components/themed-view";
-import { resumeApi, supabase } from "@/lib/supabase";
-import { Button } from "@rneui/themed";
-import { useRouter } from "expo-router";
-import { useState } from "react";
-import { ActivityIndicator, Alert, StyleSheet, View } from "react-native";
+import ResumeUploader from '@/components/ResumeUploader';
+import { ThemedText } from '@/components/themed-text';
+import { ThemedView } from '@/components/themed-view';
+import { resumeApi, supabase } from '@/lib/supabase';
+import { Button } from '@rneui/themed';
+import { useRouter } from 'expo-router';
+import { useState } from 'react';
+import { ActivityIndicator, Alert, StyleSheet, View } from 'react-native';
 
 export default function UploadScreen() {
   const router = useRouter();
@@ -24,23 +24,23 @@ export default function UploadScreen() {
       const {
         data: { user },
       } = await supabase.auth.getUser();
-      if (!user) throw new Error("No user found");
+      if (!user) throw new Error('No user found');
 
       // Mark onboarding as complete
       await resumeApi.updateOnboardingStatus(user.id, true);
 
       // Navigate to main app
-      router.replace("/(tabs)");
+      router.replace('/(tabs)');
     } catch (error) {
-      console.error("Error completing onboarding:", error);
-      Alert.alert("Error", "Failed to complete setup. Please try again.");
+      console.error('Error completing onboarding:', error);
+      Alert.alert('Error', 'Failed to complete setup. Please try again.');
     } finally {
       setUploading(false);
     }
   };
 
   const handleSkip = () => {
-    router.push("/(onboarding)/interview-mode");
+    router.push('/(onboarding)/interview-mode');
   };
 
   return (
@@ -61,7 +61,7 @@ export default function UploadScreen() {
       <View style={styles.buttonContainer}>
         {fileUploaded ? (
           <Button
-            title={uploading ? "Completing..." : "Continue"}
+            title={uploading ? 'Completing...' : 'Continue'}
             onPress={handleContinue}
             disabled={uploading}
             size="lg"
@@ -89,18 +89,18 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     gap: 20,
   },
   title: {
     fontSize: 28,
-    textAlign: "center",
+    textAlign: 'center',
     marginBottom: 10,
   },
   description: {
     fontSize: 16,
-    textAlign: "center",
+    textAlign: 'center',
     lineHeight: 24,
     paddingHorizontal: 20,
     marginBottom: 20,

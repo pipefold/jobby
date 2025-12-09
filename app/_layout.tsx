@@ -1,4 +1,8 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import {
+  DarkTheme,
+  DefaultTheme,
+  ThemeProvider,
+} from '@react-navigation/native';
 import { Stack, useRouter, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
@@ -18,7 +22,8 @@ export const unstable_settings = {
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [session, setSession] = useState<Session | null>(null);
-  const [onboardingStatus, setOnboardingStatus] = useState<OnboardingStatus | null>(null);
+  const [onboardingStatus, setOnboardingStatus] =
+    useState<OnboardingStatus | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const segments = useSegments();
@@ -35,7 +40,9 @@ export default function RootLayout() {
     });
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
       if (session?.user) {
         checkOnboardingStatus(session.user.id);
@@ -56,16 +63,28 @@ export default function RootLayout() {
       if (error) {
         console.error('Error checking onboarding status:', error);
         // If error, assume onboarding not complete
-        setOnboardingStatus({ user_id: userId, resume_completed: false, completed_at: null });
+        setOnboardingStatus({
+          user_id: userId,
+          resume_completed: false,
+          completed_at: null,
+        });
       } else if (data) {
         setOnboardingStatus(data);
       } else {
         // No status record yet, create one
-        setOnboardingStatus({ user_id: userId, resume_completed: false, completed_at: null });
+        setOnboardingStatus({
+          user_id: userId,
+          resume_completed: false,
+          completed_at: null,
+        });
       }
     } catch (error) {
       console.error('Error in checkOnboardingStatus:', error);
-      setOnboardingStatus({ user_id: userId, resume_completed: false, completed_at: null });
+      setOnboardingStatus({
+        user_id: userId,
+        resume_completed: false,
+        completed_at: null,
+      });
     } finally {
       setLoading(false);
     }
@@ -82,7 +101,11 @@ export default function RootLayout() {
       return;
     }
 
-    if (onboardingStatus && !onboardingStatus.resume_completed && !inOnboarding) {
+    if (
+      onboardingStatus &&
+      !onboardingStatus.resume_completed &&
+      !inOnboarding
+    ) {
       // Logged in but onboarding not complete - redirect to onboarding
       router.replace('/(onboarding)/welcome');
     } else if (onboardingStatus?.resume_completed && inOnboarding) {
@@ -107,7 +130,9 @@ export default function RootLayout() {
   if (loading) {
     return (
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <View
+          style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+        >
           <ActivityIndicator size="large" />
         </View>
         <StatusBar style="auto" />
@@ -121,7 +146,10 @@ export default function RootLayout() {
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="(onboarding)" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal', headerShown: true }} />
+        <Stack.Screen
+          name="modal"
+          options={{ presentation: 'modal', title: 'Modal', headerShown: true }}
+        />
       </Stack>
       <StatusBar style="auto" />
     </ThemeProvider>

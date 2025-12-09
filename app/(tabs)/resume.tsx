@@ -1,5 +1,11 @@
 import { useState, useEffect } from 'react';
-import { StyleSheet, ScrollView, View, Alert, ActivityIndicator } from 'react-native';
+import {
+  StyleSheet,
+  ScrollView,
+  View,
+  Alert,
+  ActivityIndicator,
+} from 'react-native';
 import { Button } from '@rneui/themed';
 import { useRouter } from 'expo-router';
 
@@ -20,14 +26,16 @@ export default function ResumeScreen() {
   const loadResume = async () => {
     try {
       setLoading(true);
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) throw new Error('No user found');
 
       const { data, error } = await resumeApi.getBasisResume(user.id);
       if (error && error.code !== 'PGRST116') {
         throw error;
       }
-      
+
       setResume(data);
     } catch (error) {
       console.error('Error loading resume:', error);
@@ -39,9 +47,11 @@ export default function ResumeScreen() {
 
   const handleUpdateResume = async () => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) return;
-      
+
       await resumeApi.updateOnboardingStatus(user.id, false);
       router.push('/(onboarding)/resume-choice');
     } catch (error) {
@@ -107,39 +117,49 @@ export default function ResumeScreen() {
             <ThemedText type="subtitle" style={styles.sectionTitle}>
               Basic Information
             </ThemedText>
-            
+
             {resume.resume_data.basics.name && (
               <View style={styles.field}>
                 <ThemedText style={styles.label}>Name:</ThemedText>
-                <ThemedText style={styles.value}>{resume.resume_data.basics.name}</ThemedText>
+                <ThemedText style={styles.value}>
+                  {resume.resume_data.basics.name}
+                </ThemedText>
               </View>
             )}
-            
+
             {resume.resume_data.basics.email && (
               <View style={styles.field}>
                 <ThemedText style={styles.label}>Email:</ThemedText>
-                <ThemedText style={styles.value}>{resume.resume_data.basics.email}</ThemedText>
+                <ThemedText style={styles.value}>
+                  {resume.resume_data.basics.email}
+                </ThemedText>
               </View>
             )}
-            
+
             {resume.resume_data.basics.phone && (
               <View style={styles.field}>
                 <ThemedText style={styles.label}>Phone:</ThemedText>
-                <ThemedText style={styles.value}>{resume.resume_data.basics.phone}</ThemedText>
+                <ThemedText style={styles.value}>
+                  {resume.resume_data.basics.phone}
+                </ThemedText>
               </View>
             )}
-            
+
             {resume.resume_data.basics.location?.city && (
               <View style={styles.field}>
                 <ThemedText style={styles.label}>Location:</ThemedText>
-                <ThemedText style={styles.value}>{resume.resume_data.basics.location.city}</ThemedText>
+                <ThemedText style={styles.value}>
+                  {resume.resume_data.basics.location.city}
+                </ThemedText>
               </View>
             )}
-            
+
             {resume.resume_data.basics.summary && (
               <View style={styles.field}>
                 <ThemedText style={styles.label}>Summary:</ThemedText>
-                <ThemedText style={styles.value}>{resume.resume_data.basics.summary}</ThemedText>
+                <ThemedText style={styles.value}>
+                  {resume.resume_data.basics.summary}
+                </ThemedText>
               </View>
             )}
           </View>
@@ -152,13 +172,19 @@ export default function ResumeScreen() {
             </ThemedText>
             {resume.resume_data.work.map((job, index) => (
               <View key={index} style={styles.item}>
-                <ThemedText style={styles.itemTitle}>{job.position || 'Position'}</ThemedText>
-                <ThemedText style={styles.itemSubtitle}>{job.name || 'Company'}</ThemedText>
+                <ThemedText style={styles.itemTitle}>
+                  {job.position || 'Position'}
+                </ThemedText>
+                <ThemedText style={styles.itemSubtitle}>
+                  {job.name || 'Company'}
+                </ThemedText>
                 <ThemedText style={styles.dates}>
                   {job.startDate} - {job.endDate || 'Present'}
                 </ThemedText>
                 {job.summary && (
-                  <ThemedText style={styles.itemDescription}>{job.summary}</ThemedText>
+                  <ThemedText style={styles.itemDescription}>
+                    {job.summary}
+                  </ThemedText>
                 )}
                 {job.highlights && job.highlights.length > 0 && (
                   <View style={styles.highlights}>
@@ -174,25 +200,32 @@ export default function ResumeScreen() {
           </View>
         )}
 
-        {resume.resume_data?.education && resume.resume_data.education.length > 0 && (
-          <View style={styles.section}>
-            <ThemedText type="subtitle" style={styles.sectionTitle}>
-              Education
-            </ThemedText>
-            {resume.resume_data.education.map((edu, index) => (
-              <View key={index} style={styles.item}>
-                <ThemedText style={styles.itemTitle}>{edu.studyType || 'Degree'}</ThemedText>
-                <ThemedText style={styles.itemSubtitle}>{edu.institution || 'Institution'}</ThemedText>
-                {edu.area && <ThemedText style={styles.dates}>{edu.area}</ThemedText>}
-                {edu.startDate && (
-                  <ThemedText style={styles.dates}>
-                    {edu.startDate} - {edu.endDate || 'Present'}
+        {resume.resume_data?.education &&
+          resume.resume_data.education.length > 0 && (
+            <View style={styles.section}>
+              <ThemedText type="subtitle" style={styles.sectionTitle}>
+                Education
+              </ThemedText>
+              {resume.resume_data.education.map((edu, index) => (
+                <View key={index} style={styles.item}>
+                  <ThemedText style={styles.itemTitle}>
+                    {edu.studyType || 'Degree'}
                   </ThemedText>
-                )}
-              </View>
-            ))}
-          </View>
-        )}
+                  <ThemedText style={styles.itemSubtitle}>
+                    {edu.institution || 'Institution'}
+                  </ThemedText>
+                  {edu.area && (
+                    <ThemedText style={styles.dates}>{edu.area}</ThemedText>
+                  )}
+                  {edu.startDate && (
+                    <ThemedText style={styles.dates}>
+                      {edu.startDate} - {edu.endDate || 'Present'}
+                    </ThemedText>
+                  )}
+                </View>
+              ))}
+            </View>
+          )}
 
         {resume.resume_data?.skills && resume.resume_data.skills.length > 0 && (
           <View style={styles.section}>
@@ -209,24 +242,29 @@ export default function ResumeScreen() {
           </View>
         )}
 
-        {resume.resume_data?.projects && resume.resume_data.projects.length > 0 && (
-          <View style={styles.section}>
-            <ThemedText type="subtitle" style={styles.sectionTitle}>
-              Projects
-            </ThemedText>
-            {resume.resume_data.projects.map((project, index) => (
-              <View key={index} style={styles.item}>
-                <ThemedText style={styles.itemTitle}>{project.name || 'Project'}</ThemedText>
-                {project.description && (
-                  <ThemedText style={styles.itemDescription}>{project.description}</ThemedText>
-                )}
-                {project.url && (
-                  <ThemedText style={styles.link}>{project.url}</ThemedText>
-                )}
-              </View>
-            ))}
-          </View>
-        )}
+        {resume.resume_data?.projects &&
+          resume.resume_data.projects.length > 0 && (
+            <View style={styles.section}>
+              <ThemedText type="subtitle" style={styles.sectionTitle}>
+                Projects
+              </ThemedText>
+              {resume.resume_data.projects.map((project, index) => (
+                <View key={index} style={styles.item}>
+                  <ThemedText style={styles.itemTitle}>
+                    {project.name || 'Project'}
+                  </ThemedText>
+                  {project.description && (
+                    <ThemedText style={styles.itemDescription}>
+                      {project.description}
+                    </ThemedText>
+                  )}
+                  {project.url && (
+                    <ThemedText style={styles.link}>{project.url}</ThemedText>
+                  )}
+                </View>
+              ))}
+            </View>
+          )}
 
         <View style={styles.buttonContainer}>
           <Button
@@ -371,4 +409,3 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
 });
-

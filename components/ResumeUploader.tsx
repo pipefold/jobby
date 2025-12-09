@@ -38,7 +38,7 @@ export default function ResumeUploader({
       }
 
       const file = result.assets[0];
-      
+
       if (!file) {
         Alert.alert('Error', 'No file selected');
         return;
@@ -65,17 +65,20 @@ export default function ResumeUploader({
       setUploadProgress(0);
 
       // Get current user
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) throw new Error('No user found');
 
       // Upload file to Supabase Storage
       setUploadProgress(30);
-      const { data: uploadData, error: uploadError } = await resumeApi.uploadResumeFile(
-        user.id,
-        file.uri,
-        file.name,
-        file.mimeType || 'application/octet-stream'
-      );
+      const { data: uploadData, error: uploadError } =
+        await resumeApi.uploadResumeFile(
+          user.id,
+          file.uri,
+          file.name,
+          file.mimeType || 'application/octet-stream'
+        );
 
       if (uploadError) throw uploadError;
       if (!uploadData) throw new Error('Upload failed - no data returned');
@@ -102,17 +105,18 @@ export default function ResumeUploader({
       if (saveError) throw saveError;
 
       setUploadProgress(100);
-      
-      Alert.alert(
-        'Success!',
-        'Your resume has been uploaded successfully.',
-        [{ text: 'OK' }]
-      );
+
+      Alert.alert('Success!', 'Your resume has been uploaded successfully.', [
+        { text: 'OK' },
+      ]);
 
       onUploadSuccess?.(uploadData.url, file.name);
     } catch (error) {
       console.error('Error uploading file:', error);
-      Alert.alert('Upload Failed', 'Failed to upload your resume. Please try again.');
+      Alert.alert(
+        'Upload Failed',
+        'Failed to upload your resume. Please try again.'
+      );
       onUploadError?.(error as Error);
     } finally {
       setUploading(false);
@@ -135,10 +139,7 @@ export default function ResumeUploader({
           <ThemedText>Uploading... {uploadProgress}%</ThemedText>
           <View style={styles.progressBar}>
             <View
-              style={[
-                styles.progressFill,
-                { width: `${uploadProgress}%` },
-              ]}
+              style={[styles.progressFill, { width: `${uploadProgress}%` }]}
             />
           </View>
         </View>
@@ -215,4 +216,3 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
 });
-

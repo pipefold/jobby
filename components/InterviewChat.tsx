@@ -24,22 +24,28 @@ interface InterviewChatProps {
   onComplete: (responses: InterviewResponse[]) => void;
 }
 
-export default function InterviewChat({ mode, onComplete }: InterviewChatProps) {
+export default function InterviewChat({
+  mode,
+  onComplete,
+}: InterviewChatProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState('');
   const [responses, setResponses] = useState<InterviewResponse[]>([]);
-  const [currentSection, setCurrentSection] = useState<keyof JSONResume>('basics');
+  const [currentSection, setCurrentSection] =
+    useState<keyof JSONResume>('basics');
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [questions, setQuestions] = useState<string[]>([]);
   const scrollViewRef = useRef<ScrollView>(null);
 
   useEffect(() => {
     // Start interview with welcome message
-    addBotMessage("Hi! I'm here to help you create your resume. Let's start with some basic information.");
-    
+    addBotMessage(
+      "Hi! I'm here to help you create your resume. Let's start with some basic information."
+    );
+
     // Load first section's questions
     loadSection('basics');
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const loadSection = (section: keyof JSONResume) => {
@@ -47,7 +53,7 @@ export default function InterviewChat({ mode, onComplete }: InterviewChatProps) 
     setQuestions(sectionQuestions);
     setCurrentQuestionIndex(0);
     setCurrentSection(section);
-    
+
     // Add section intro message
     const sectionNames: Record<string, string> = {
       basics: 'Basic Information',
@@ -56,9 +62,11 @@ export default function InterviewChat({ mode, onComplete }: InterviewChatProps) 
       skills: 'Skills',
       projects: 'Projects',
     };
-    
+
     setTimeout(() => {
-      addBotMessage(`Great! Let's talk about your ${sectionNames[section] || section}.`);
+      addBotMessage(
+        `Great! Let's talk about your ${sectionNames[section] || section}.`
+      );
       askNextQuestion(sectionQuestions, 0);
     }, 500);
   };
@@ -96,17 +104,17 @@ export default function InterviewChat({ mode, onComplete }: InterviewChatProps) 
 
     const userAnswer = inputText.trim();
     addUserMessage(userAnswer);
-    
+
     // Save response
     const response: InterviewResponse = {
       question: questions[currentQuestionIndex],
       answer: userAnswer,
       section: currentSection,
     };
-    
+
     const updatedResponses = [...responses, response];
     setResponses(updatedResponses);
-    
+
     setInputText('');
 
     // Check if question is about adding another entry
@@ -142,7 +150,7 @@ export default function InterviewChat({ mode, onComplete }: InterviewChatProps) 
 
   const moveToNextSection = (currentResponses: InterviewResponse[]) => {
     const nextSection = getNextSection(currentSection);
-    
+
     if (!nextSection) {
       // Interview complete
       setTimeout(() => {
@@ -240,10 +248,7 @@ export default function InterviewChat({ mode, onComplete }: InterviewChatProps) 
             </TouchableOpacity>
           </View>
         ) : (
-          <TouchableOpacity
-            style={styles.voiceButton}
-            onPress={handleKeyPress}
-          >
+          <TouchableOpacity style={styles.voiceButton} onPress={handleKeyPress}>
             <ThemedText style={styles.voiceButtonText}>
               🎤 Hold to Record
             </ThemedText>
@@ -353,4 +358,3 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-

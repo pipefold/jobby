@@ -1,20 +1,42 @@
-# Welcome to your Expo app 👋
+# Jobby - Expo App with Supabase 👋
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+This is an [Expo](https://expo.dev) project with [Supabase](https://supabase.com) authentication and user management.
 
 ## Get started
 
 1. Install dependencies
 
    ```bash
-   npm install
+   pnpm install
    ```
 
-2. Start the app
+2. Set up Supabase
+
+   - Create a Supabase project at [https://supabase.com/dashboard](https://supabase.com/dashboard)
+   - Run the "User Management Starter" SQL script from the SQL Editor
+   - Get your Project URL and Publishable API Key from Settings > API
+   - Create a `.env` file (see below)
+
+3. Configure environment variables
 
    ```bash
-   npx expo start
+   cp .env.example .env
    ```
+
+   Edit `.env` and add your Supabase credentials:
+   
+   ```env
+   EXPO_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+   EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your-key-here
+   ```
+
+4. Start the app
+
+   ```bash
+   pnpm start
+   ```
+
+For detailed setup instructions, see [SUPABASE_SETUP.md](./SUPABASE_SETUP.md)
 
 In the output, you'll find options to open the app in a
 

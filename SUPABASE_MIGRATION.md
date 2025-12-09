@@ -1,117 +1,41 @@
 # Supabase Database Migration for Resume Feature
 
-## Running the Migration
+## Running the Migrations
 
-You need to run the SQL migration file in your Supabase project to set up the
-database schema for the resume feature.
+You need to run the SQL migration files in your Supabase project to set up the
+database schema and storage for the resume feature.
 
-### Option 1: Using Supabase Dashboard (Recommended)
+### Using Supabase CLI (Recommended)
+
+```bash
+# Link your project (first time only)
+npx supabase link --project-ref your-project-ref
+
+# Run all migrations (this will create tables, storage bucket, and policies)
+npx supabase db push
+```
+
+This will automatically apply:
+
+- Migration 001: Database tables (`resumes`, `onboarding_status`) with RLS
+  policies
+- Migration 002: Storage bucket (`resumes`) with access policies
+
+### Alternative: Using Supabase Dashboard
+
+If you prefer to run migrations manually:
 
 1. Go to your Supabase Dashboard:
    [https://supabase.com/dashboard](https://supabase.com/dashboard)
 2. Select your project
 3. Navigate to **SQL Editor** in the left sidebar
 4. Click **"New query"**
-5. Copy the contents of `supabase/migrations/001_resume_tables.sql`
-6. Paste into the SQL Editor
-7. Click **"Run"** to execute the migration
+5. Copy and run `supabase/migrations/001_resume_tables.sql`
+6. Copy and run `supabase/migrations/002_resume_storage.sql`
 
-### Option 2: Using Supabase CLI
+## What These Migrations Do
 
-If you have the Supabase CLI installed:
-
-```bash
-# Link your project (first time only)
-supabase link --project-ref your-project-ref
-
-# Run the migration
-supabase db push
-```
-
-## Setting Up Storage Bucket
-
-After running the SQL migration, create the storage bucket for resume files:
-
-1. In your Supabase Dashboard, go to **Storage**
-2. Click **"Create a new bucket"**
-3. Name it `resumes`
-4. Set it to **Private** (not public - we'll use signed URLs for access)
-5. Click **"Create bucket"**
-
-### Set Storage Policies
-
-After creating the bucket, set up Row Level Security policies:
-
-1. Click on the `resumes` bucket
-2. Go to **Policies** tab
-3. Click **"New Policy"**
-4. Create the following policies:
-
-**Policy 1: Users can upload their own resumes**
-
-```sql
--- Policy name: Users can upload own resume files
--- Allowed operation: INSERT
--- Target roles: authenticated
-
-CREATE POLICY "Users can upload own resume files"
-ON storage.objects FOR INSERT
-TO authenticated
-WITH CHECK (
-    bucket_id = 'resumes' AND
-    auth.uid()::text = (storage.foldername(name))[1]
-);
-```
-
-**Policy 2: Users can view their own resumes**
-
-```sql
--- Policy name: Users can view own resume files
--- Allowed operation: SELECT
--- Target roles: authenticated
-
-CREATE POLICY "Users can view own resume files"
-ON storage.objects FOR SELECT
-TO authenticated
-USING (
-    bucket_id = 'resumes' AND
-    auth.uid()::text = (storage.foldername(name))[1]
-);
-```
-
-**Policy 3: Users can update their own resumes**
-
-```sql
--- Policy name: Users can update own resume files
--- Allowed operation: UPDATE
--- Target roles: authenticated
-
-CREATE POLICY "Users can update own resume files"
-ON storage.objects FOR UPDATE
-TO authenticated
-USING (
-    bucket_id = 'resumes' AND
-    auth.uid()::text = (storage.foldername(name))[1]
-);
-```
-
-**Policy 4: Users can delete their own resumes**
-
-```sql
--- Policy name: Users can delete own resume files
--- Allowed operation: DELETE
--- Target roles: authenticated
-
-CREATE POLICY "Users can delete own resume files"
-ON storage.objects FOR DELETE
-TO authenticated
-USING (
-    bucket_id = 'resumes' AND
-    auth.uid()::text = (storage.foldername(name))[1]
-);
-```
-
-## What This Migration Does
+### Migration 001: Database Tables
 
 - Creates `resumes` table to store resume data in JSON Resume format
 - Creates `onboarding_status` table to track user onboarding progress
@@ -119,7 +43,15 @@ USING (
 - Creates indexes for better query performance
 - Sets up automatic `updated_at` timestamp updates
 - Automatically creates an onboarding_status entry when a new user signs up
-- Creates storage bucket for uploaded resume files (PDF, DOCX, etc.)
+
+### Migration 002: Storage Setup
+
+- Creates `resumes` storage bucket (private)
+- Sets up RLS policies for storage.objects to allow users to:
+  - Upload their own resume files
+  - View their own resume files
+  - Update their own resume files
+  - Delete their own resume files
 
 ## Verification
 

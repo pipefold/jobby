@@ -59,9 +59,11 @@ export default function RootLayout() {
 
   const checkOnboardingStatus = async (userId: string) => {
     try {
+      console.log('🔍 Checking onboarding status for user:', userId);
       const { data, error } = await resumeApi.getOnboardingStatus(userId);
+
       if (error) {
-        console.error('Error checking onboarding status:', error);
+        console.error('❌ Error checking onboarding status:', error);
         // If error, assume onboarding not complete
         setOnboardingStatus({
           user_id: userId,
@@ -69,8 +71,10 @@ export default function RootLayout() {
           completed_at: null,
         });
       } else if (data) {
+        console.log('✅ Onboarding status loaded:', data);
         setOnboardingStatus(data);
       } else {
+        console.log('⚠️  No onboarding status found, will be created');
         // No status record yet, create one
         setOnboardingStatus({
           user_id: userId,
@@ -79,7 +83,7 @@ export default function RootLayout() {
         });
       }
     } catch (error) {
-      console.error('Error in checkOnboardingStatus:', error);
+      console.error('❌ Exception in checkOnboardingStatus:', error);
       setOnboardingStatus({
         user_id: userId,
         resume_completed: false,

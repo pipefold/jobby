@@ -1,7 +1,8 @@
 import { Button, Input } from '@rneui/themed';
 import React, { useState } from 'react';
-import { Alert, AppState, StyleSheet, View } from 'react-native';
+import { Alert, AppState, StyleSheet, View, Platform } from 'react-native';
 import { supabase } from '../lib/supabase';
+import { ThemedText } from './themed-text';
 
 // Tells Supabase Auth to continuously refresh the session automatically if
 // the app is in the foreground. When this is added, you will continue to receive
@@ -19,20 +20,39 @@ export default function Auth() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   async function signInWithEmail() {
     setLoading(true);
+    setErrorMessage('');
+
+    console.log('🔐 Attempting sign in with:', email);
+
     const { error } = await supabase.auth.signInWithPassword({
       email: email,
       password: password,
     });
 
-    if (error) Alert.alert(error.message);
+    if (error) {
+      console.error('❌ Auth error:', error);
+      const message = error.message;
+      setErrorMessage(message);
+      // Alert.alert still works on native
+      if (Platform.OS !== 'web') {
+        Alert.alert(message);
+      }
+    } else {
+      console.log('✅ Sign in successful!');
+    }
     setLoading(false);
   }
 
   async function signUpWithEmail() {
     setLoading(true);
+    setErrorMessage('');
+
+    console.log('📝 Attempting sign up with:', email);
+
     const {
       data: { session },
       error,
@@ -41,14 +61,33 @@ export default function Auth() {
       password: password,
     });
 
-    if (error) Alert.alert(error.message);
-    if (!session)
-      Alert.alert('Please check your inbox for email verification!');
+    if (error) {
+      console.error('❌ Sign up error:', error);
+      const message = error.message;
+      setErrorMessage(message);
+      if (Platform.OS !== 'web') {
+        Alert.alert(message);
+      }
+    } else if (!session) {
+      const message = 'Please check your inbox for email verification!';
+      setErrorMessage(message);
+      if (Platform.OS !== 'web') {
+        Alert.alert(message);
+      }
+    } else {
+      console.log('✅ Sign up successful!');
+    }
     setLoading(false);
   }
 
   return (
     <View style={styles.container}>
+      {errorMessage ? (
+        <View style={styles.errorContainer}>
+          <ThemedText style={styles.errorText}>❌ {errorMessage}</ThemedText>
+        </View>
+      ) : null}
+
       <View style={[styles.verticallySpaced, styles.mt20]}>
         <Input
           label="Email"
@@ -100,5 +139,17 @@ const styles = StyleSheet.create({
   },
   mt20: {
     marginTop: 20,
+  },
+  errorContainer: {
+    backgroundColor: '#fee',
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: '#fcc',
+  },
+  errorText: {
+    color: '#c00',
+    fontSize: 14,
   },
 });

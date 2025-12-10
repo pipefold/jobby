@@ -146,16 +146,11 @@ export default function ResumeUploader({
       )}
 
       <Button
-        title={uploading ? 'Uploading...' : 'Choose File'}
+        title={uploading ? 'Uploading...' : '📤 Choose File'}
         onPress={pickDocument}
         disabled={uploading}
         size="lg"
         buttonStyle={styles.button}
-        icon={{
-          name: 'file-upload',
-          type: 'material',
-          color: 'white',
-        }}
       />
 
       <View style={styles.supportedFormats}>

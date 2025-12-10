@@ -51,7 +51,18 @@ export const resumeApi = {
       .from('onboarding_status')
       .select('*')
       .eq('user_id', userId)
-      .single();
+      .maybeSingle();
+
+    // If no record exists, create one
+    if (!data && !error) {
+      const { data: newData, error: insertError } = await supabase
+        .from('onboarding_status')
+        .insert({ user_id: userId, resume_completed: false })
+        .select()
+        .single();
+
+      return { data: newData as OnboardingStatus | null, error: insertError };
+    }
 
     return { data: data as OnboardingStatus | null, error };
   },
